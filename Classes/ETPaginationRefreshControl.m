@@ -253,19 +253,29 @@
             insets.bottom -= self.bounds.size.height;
         }
         
-        [UIView animateWithDuration:0.3 delay:0.0 options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState) animations:^{
-            
+        if([self.scrollView isKindOfClass:[UITableView class]] || [self.scrollView isKindOfClass:[UICollectionView class]])
+        {
+            [UIView animateWithDuration:0.3 delay:0.0 options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState) animations:^{
+                
+                self.scrollView.contentInset = insets;
+                
+            } completion:^(BOOL finished) {
+                
+                if(finished)
+                {
+                    self.activityIndicatorView.hidden = YES;
+                    [self.activityIndicatorView stopAnimating];
+                }
+                
+            }];
+        }
+        else
+        {
             self.scrollView.contentInset = insets;
             
-        } completion:^(BOOL finished) {
-            
-            if(finished)
-            {
-                self.activityIndicatorView.hidden = YES;
-                [self.activityIndicatorView stopAnimating];
-            }
-            
-        }];
+            self.activityIndicatorView.hidden = YES;
+            [self.activityIndicatorView stopAnimating];
+        }
         
         self.refreshing = NO;
     }
@@ -294,9 +304,11 @@
     }
     else
     {
-        frame.origin.y = [self.scrollView sizeThatFits:CGSizeMake(self.scrollView.bounds.size.width, CGFLOAT_MAX)].height;
-        
-        if([self.scrollView isKindOfClass:[UICollectionView class]])
+        if([self.scrollView isKindOfClass:[UITableView class]])
+        {
+            frame.origin.y = [self.scrollView sizeThatFits:CGSizeMake(self.scrollView.bounds.size.width, CGFLOAT_MAX)].height;
+        }
+        else if([self.scrollView isKindOfClass:[UICollectionView class]])
         {
             UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)((UICollectionView *)self.scrollView).collectionViewLayout;
             if([flowLayout respondsToSelector:@selector(collectionViewContentSize)])
@@ -304,6 +316,10 @@
                 CGSize contentSize = flowLayout.collectionViewContentSize;
                 frame.origin.y = contentSize.height;
             }
+        }
+        else
+        {
+            frame.origin.y = self.scrollView.contentSize.height;
         }
     }
     
