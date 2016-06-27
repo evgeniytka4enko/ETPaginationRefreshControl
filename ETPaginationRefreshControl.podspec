@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "ETPaginationRefreshControl"
-  s.version      = "1.0"
+  s.version      = "1.0.1"
   s.summary      = "Easy-to-use pagination refresh control."
   s.homepage     = "https://github.com/evgeniytka4enko/ETPaginationRefreshControl"
   s.license      = { :type => "MIT", :file => "LICENSE" }
