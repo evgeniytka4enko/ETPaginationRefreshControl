@@ -236,10 +236,6 @@
 
 - (void)endRefreshing
 {
-    if(!self.enabled)
-    {
-        self.enabled = YES;
-    }
     if(self.refreshing)
     {
         UIEdgeInsets insets = self.scrollView.contentInset;
